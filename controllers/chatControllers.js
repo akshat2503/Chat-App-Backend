@@ -145,8 +145,8 @@ const deleteChat = asyncHandler(async (req, res)=>{
     const { chatId } = req.body;
 
     try {
-        const deletedChat = await Chat.findOneAndDelete(chatId);
-
+        const deletedChat = await Chat.findOneAndDelete({ _id: chatId });
+        console.log("Deleting chat for userId: " + chatId);
         if(!deletedChat){
             res.status(404);
             throw new Error ("Chat not found");
