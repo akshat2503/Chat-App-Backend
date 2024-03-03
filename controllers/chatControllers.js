@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/userModel');
 const Chat = require('../models/chatModel');
 const { syncIndexes } = require('mongoose');
+const Message = require('../models/messageModel');
 
 
 const accessChat = asyncHandler(async (req, res)=>{
@@ -140,4 +141,24 @@ const removeFromGroup = asyncHandler(async (req, res)=>{
     }
 });
 
-module.exports = { accessChat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup };
+const deleteChat = asyncHandler(async (req, res)=>{
+    const { chatId } = req.body;
+
+    try {
+        const deletedChat = await Chat.findOneAndDelete(chatId);
+
+        if(!deletedChat){
+            res.status(404);
+            throw new Error ("Chat not found");
+        }
+
+        await Message.deleteMany({ chat: chatId });
+
+        res.status(200).send("Chat and messages deleted successfully.");
+    } catch (error) {
+        res.status(400);
+        throw new Error (error.message);
+    }
+});
+
+module.exports = { accessChat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup, deleteChat };
