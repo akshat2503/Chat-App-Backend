@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Schema for a single chat
 const chatModel = mongoose.Schema(
     {
         chatName: {

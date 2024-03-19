@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const Message = require('../models/messageModel');
 const Chat = require('../models/chatModel');
 
+// Endpoint to send message into a chat
 const sendMessage = asyncHandler(async (req, res)=>{
     const { content, chatId } = req.body;
 
@@ -16,9 +17,9 @@ const sendMessage = asyncHandler(async (req, res)=>{
     }
 
     try {
-        console.log("Trying");
         var message = await Message.create(newMessage);
 
+        // Populating necessary fields
         message = await Message.populate(message, {
             path: "sender",
             select: "name pic",
@@ -40,10 +41,10 @@ const sendMessage = asyncHandler(async (req, res)=>{
     }
 });
 
+// Endpoint to fetch all messages
 const allMessages = asyncHandler(async (req, res)=>{
     try {
         const messages = await Message.find({ chat: req.params.chatId }).populate("sender", "name email pic").populate("chat");
-
         res.json(messages);
     } catch (error) {
         res.status(400);

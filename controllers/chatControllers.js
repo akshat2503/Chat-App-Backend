@@ -4,7 +4,7 @@ const Chat = require('../models/chatModel');
 const { syncIndexes } = require('mongoose');
 const Message = require('../models/messageModel');
 
-
+// Endpoint to access a chat
 const accessChat = asyncHandler(async (req, res)=>{
     const { userId } = req.body;
 
@@ -46,6 +46,7 @@ const accessChat = asyncHandler(async (req, res)=>{
     }
 });
 
+// Endpoint to fetch all chats
 const fetchChats = asyncHandler(async (req, res) => {
     try {
         Chat.find({users:{$elemMatch:{$eq: req.user._id}}}).populate("users", "-password").populate("groupAdmin", "-password").populate("latestMessage").sort({ updatedAt: -1 }).then(async (results)=>{
@@ -61,11 +62,11 @@ const fetchChats = asyncHandler(async (req, res) => {
     }
 });
 
+// Endpoint to create a group chat
 const createGroupChat = asyncHandler(async (req, res)=>{
     if(!req.body.users || !req.body.name){
         return res.status(400).send({ message: "Please fill all the fields" });
     }
-
     var users = JSON.parse(req.body.users);
 
     if (users.length < 2){
@@ -91,6 +92,7 @@ const createGroupChat = asyncHandler(async (req, res)=>{
     }
 });
 
+// Endpoint to rename a group chat
 const renameGroup = asyncHandler(async (req, res)=>{
     const { chatId, chatName } = req.body;
     const updatedChat = await Chat.findByIdAndUpdate(chatId, {
@@ -107,6 +109,7 @@ const renameGroup = asyncHandler(async (req, res)=>{
     }
 });
 
+// Endpoint to add a person to an existing group chat
 const addToGroup = asyncHandler(async (req, res)=>{
     const { chatId, userId } = req.body;
 
@@ -124,6 +127,7 @@ const addToGroup = asyncHandler(async (req, res)=>{
     }
 });
 
+// Endpoint to remove a person from a group chat
 const removeFromGroup = asyncHandler(async (req, res)=>{
     const { chatId, userId } = req.body;
 
@@ -141,6 +145,7 @@ const removeFromGroup = asyncHandler(async (req, res)=>{
     }
 });
 
+// Endpoint to delete a chat
 const deleteChat = asyncHandler(async (req, res)=>{
     const { chatId } = req.body;
 

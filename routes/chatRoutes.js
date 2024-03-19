@@ -4,6 +4,7 @@ const { accessChat, fetchChats, createGroupChat, renameGroup, addToGroup, remove
 
 const router = express.Router();
 
+// API Endpoints for /api/chat/
 router.route('/').post(protect, accessChat);
 router.route('/').get(protect, fetchChats);
 router.route('/group').post(protect, createGroupChat);
