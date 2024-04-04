@@ -51,7 +51,7 @@ io.on("connection", (socket)=>{
     socket.on("stop typing", (room)=>socket.in(room).emit("stop typing"));
     
     // Added for testing expression sending over socket
-    socket.on("expression", (room)=>socket.in(room).emit("stop typing"));
+    socket.on("expression", (expression, room) => socket.in(room).emit("expression", expression));
     
     socket.on("new message", (newMessageRecieved)=>{
         var chat = newMessageRecieved.chat;
